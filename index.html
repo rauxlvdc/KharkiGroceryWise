@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#526b55">
+  <meta name="description" content="Kharki's GroceryWise — a simple grocery list and budget planner with automatic weight-based pricing.">
+  <meta name="application-name" content="GroceryWise">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Kharki's GroceryWise</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="Kharki's GroceryWise home">
+        <span class="brand-mark">K</span>
+        <span><strong>Kharki's</strong><small>GroceryWise</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
+      <button class="nav-item" data-view="list"><span>☷</span> Grocery list</button>
+      <button class="nav-item" data-view="history"><span>◷</span> Shopping history</button>
+      <div class="sidebar-note">
+        <span class="leaf">✳</span>
+        <strong>Small steps, smarter spending.</strong>
+        <p>Keep your grocery plans clear and your budget in check.</p>
+      </div>
+      <div class="side-footer">KHARKI'S GROCERYWISE <span>•</span> v0.1</div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow" id="date-label">YOUR SHOPPING SPACE</div>
+          <h1 id="page-title">Good planning starts here.</h1>
+        </div>
+        <div class="top-actions"><button class="secondary-btn install-btn" id="install-app" hidden>Install app</button><button class="primary-btn top-add" id="open-add">＋ <span>Add item</span></button></div>
+      </header>
+
+      <section class="view active" id="overview-view">
+        <section class="welcome-panel">
+          <div>
+            <span class="welcome-tag">YOUR GROCERY COMPANION</span>
+            <h2>Spend with a plan.<br><em>Shop with confidence.</em></h2>
+            <p>Set your budget, organize your essentials, and see where every peso goes.</p>
+          </div>
+          <div class="basket-art" aria-hidden="true"><span>🥬</span><span>🍅</span><span>🥕</span><span>🍎</span><span>🥑</span></div>
+        </section>
+
+        <section class="stats-grid">
+          <article class="stat-card budget-card">
+            <div class="stat-top"><span>Monthly / trip budget</span><span class="stat-icon">₱</span></div>
+            <div class="stat-value" id="budget-value">₱0.00</div>
+            <button class="text-btn" id="edit-budget">Set your budget ↗</button>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Estimated total</span><span class="stat-icon">▤</span></div>
+            <div class="stat-value" id="spent-value">₱0.00</div>
+            <div class="stat-foot" id="item-count">0 items in your list</div>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Budget remaining</span><span class="stat-icon">↗</span></div>
+            <div class="stat-value green" id="remaining-value">₱0.00</div>
+            <div class="stat-foot" id="budget-status">Set a budget to get started</div>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <article class="panel budget-progress">
+            <div class="panel-heading"><div><span class="eyebrow">BUDGET OVERVIEW</span><h3>Your spending snapshot</h3></div><span class="soft-pill">Live estimate</span></div>
+            <div class="progress-copy"><strong id="progress-percent">0%</strong><span>of your budget planned</span></div>
+            <div class="progress-track"><div id="progress-bar"></div></div>
+            <div class="progress-legend"><span><i class="dot sage"></i> Planned expenses</span><span id="progress-amount">₱0.00 / ₱0.00</span></div>
+            <div class="tip-box"><span>✦</span><p><strong>Grocery tip</strong> Add estimated prices before shopping, then update quantities and prices using your actual receipt.</p></div>
+          </article>
+          <article class="panel category-panel">
+            <div class="panel-heading"><div><span class="eyebrow">WHERE IT GOES</span><h3>Category breakdown</h3></div></div>
+            <div id="category-breakdown" class="category-breakdown"><div class="empty-small">Your category totals will appear here.</div></div>
+          </article>
+        </section>
+
+        <section class="panel recent-panel">
+          <div class="panel-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h3>Grocery list preview</h3></div><button class="text-btn" data-go="list">View all items →</button></div>
+          <div id="overview-items" class="table-wrap"></div>
+        </section>
+      </section>
+
+      <section class="view" id="list-view">
+        <div class="section-intro"><div><span class="eyebrow">PLAN YOUR PURCHASES</span><h2>Your grocery list</h2><p>Add everyday essentials and keep an eye on the running total.</p></div><button class="primary-btn" id="list-add">＋ Add item</button></div>
+        <div class="list-toolbar">
+          <label class="search-box">⌕ <input id="search-items" placeholder="Search your items…"></label>
+          <select id="filter-category" aria-label="Filter by category"><option value="">All categories</option></select>
+          <select id="filter-status" aria-label="Filter by status"><option value="">All items</option><option value="pending">To buy</option><option value="bought">Purchased</option></select>
+          <button class="secondary-btn export-btn" id="export-csv">Export CSV</button>
+        </div>
+        <div class="panel list-panel"><div id="grocery-items" class="table-wrap"></div></div>
+        <div class="list-total"><div><span>ESTIMATED GROCERY TOTAL</span><strong id="list-total">₱0.00</strong></div><div><span id="list-remaining-label">Budget not set</span><strong id="list-remaining">—</strong></div></div>
+      </section>
+
+      <section class="view" id="history-view">
+        <div class="section-intro"><div><span class="eyebrow">YOUR PAST PLANS</span><h2>Shopping history</h2><p>Save a snapshot of a completed shopping trip on this device.</p></div></div>
+        <div class="panel history-panel"><div id="history-items" class="history-list"></div></div>
+      </section>
+      <footer class="main-footer">Made for thoughtful shopping <span>✳</span> Your data stays in this browser. <span class="footer-version">Version 1.0</span></footer>
+    </main>
+  </div>
+
+  <dialog id="item-dialog" class="modal">
+    <form id="item-form" method="dialog">
+      <div class="modal-heading"><div><span class="eyebrow">GROCERY DETAILS</span><h2 id="item-modal-title">Add an item</h2></div><button type="button" class="close-btn" data-close="item-dialog">×</button></div>
+      <input type="hidden" id="item-id">
+      <label>Item name<input id="item-name" required maxlength="70" placeholder="e.g. Tomatoes"></label>
+      <div class="form-row">
+        <label>Category<select id="item-category" required></select></label>
+        <label>Unit<select id="item-unit"><option value="g">Grams (g)</option><option value="kg">Kilograms (kg)</option><option value="piece">Piece</option><option value="pack">Pack</option><option value="bottle">Bottle</option><option value="can">Can</option><option value="liter">Liter</option><option value="ml">Milliliter (ml)</option></select></label>
+      </div>
+      <div class="form-row">
+        <label id="quantity-label">Quantity (g)<input id="item-quantity" type="number" min="0.001" step="any" required placeholder="500"></label>
+        <label id="price-label">Price per kg (₱)<input id="item-price" type="number" min="0" step="0.01" required placeholder="80"></label>
+      </div>
+      <div class="calc-preview"><span>Calculated item total</span><strong id="item-total-preview">₱0.00</strong><small id="calc-explanation">Enter a quantity and unit price.</small></div>
+      <label class="check-label"><input type="checkbox" id="item-bought"> Mark as purchased</label>
+      <div class="modal-actions"><button type="button" class="secondary-btn" data-close="item-dialog">Cancel</button><button class="primary-btn" type="submit">Save item</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="budget-dialog" class="modal small-modal">
+    <form id="budget-form" method="dialog">
+      <div class="modal-heading"><div><span class="eyebrow">PLAN AHEAD</span><h2>Set your budget</h2></div><button type="button" class="close-btn" data-close="budget-dialog">×</button></div>
+      <label>Available grocery budget (₱)<input id="budget-input" type="number" min="0" step="0.01" required placeholder="5000"></label>
+      <p class="form-help">This can be your budget for one shopping trip or your monthly grocery allowance.</p>
+      <div class="modal-actions"><button type="button" class="secondary-btn" data-close="budget-dialog">Cancel</button><button class="primary-btn" type="submit">Save budget</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
